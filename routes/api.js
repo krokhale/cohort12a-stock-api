@@ -15,10 +15,16 @@ router.get('/', function(req, res, next) {
 
 // 4. GET /api/v1/wallet - this will fetch the current wallet value  - HW
 // 5. PUT /api/v1/wallet - this will update the value of the money in your wallet - HW HINT: you will need req.body just like a POST request.
+// Wallet - Single row.
 
 
 // 6. GET /api/v1/search/:symbol DONE
 // GET http:/localhost:3000/api/v1/search/AAPL
+
+router.get('/wallet', async function(req, res, next) {
+    let wallet = await Wallet.findOne({});
+    res.json(wallet);
+});
 
 router.get('/portfolio', async function(req, res, next) {
     // write a query here to fetch all the rows in the portfolio table

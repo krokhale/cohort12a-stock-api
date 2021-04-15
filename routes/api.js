@@ -50,7 +50,14 @@ router.post('/portfolio', async function(req, res, next) {
     // this is where the information from the front end is available to us as req.body
     console.log(req.body);
     // write a query here to create an item in the portfolio table
-    let item = await Portfolio.create(req.body);
+    let wallet = await Wallet.findOne({});
+    let totalRequired = parseFloat(req.body.price) * parseFloat(req.body.quantity);
+    let item = {};
+    if(parseFloat(wallet.value) >= totalRequired){
+        item = await Portfolio.create(req.body);
+        let newWalletValue = parseFloat(wallet.value) - totalRequired;
+        await wallet.update({value: newWalletValue});
+    }
     res.json(item);
 });
 

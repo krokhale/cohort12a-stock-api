@@ -45,6 +45,22 @@ router.get('/search/:symbol', async function(req, res, next) {
     }
 });
 
+// HW: Figure out the last 7 days stock prices and print them out
+
+router.get('/search/:symbol/historical', async function(req, res, next) {
+    // req.params is going to have the value of the symbol here
+    console.log(req.params)
+    // let items = await Portfolio.findAll({});
+    try {
+        const data = await yahooStockPrices.getHistoricalPrices(0, 6, 2020, 0, 8, 2020, 'AAPL', '1d');
+
+        res.json({success: true, data: data});
+    } catch(err){
+        console.log(err)
+        res.json({success: false, data: {}});
+    }
+});
+
 
 router.post('/portfolio', async function(req, res, next) {
     // this is where the information from the front end is available to us as req.body

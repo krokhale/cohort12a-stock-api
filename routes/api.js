@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const {Portfolio, Wallet} = require('../lib/models');
 const yahooStockPrices = require('yahoo-stock-prices')
+const moment = require('moment'); // require
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -51,8 +52,31 @@ router.get('/search/:symbol/historical', async function(req, res, next) {
     // req.params is going to have the value of the symbol here
     console.log(req.params)
     // let items = await Portfolio.findAll({});
+
+    let start = moment().subtract(8, 'weeks');
+    let end = moment().subtract(7,'weeks');
+
+    let startMonth = parseInt(start.format('M'));
+    let startDay = parseInt(start.format('D'));
+    let startYear = parseInt(start.format('YYYY'));
+
+    let endYear =  parseInt(end.format('YYYY'));
+    let endMonth = parseInt(end.format('M'));
+    let endDay = parseInt(end.format('D'));
+
+    console.log(startMonth, startDay, startYear)
+    console.log(endMonth, endDay, endYear)
+
     try {
-        const data = await yahooStockPrices.getHistoricalPrices(0, 6, 2020, 0, 8, 2020, 'AAPL', '1d');
+        const data = await yahooStockPrices.getHistoricalPrices(
+            startMonth,
+            startDay,
+            startYear,
+            endMonth,
+            endDay,
+            endYear,
+            req.params.symbol,
+            '1d');
 
         res.json({success: true, data: data});
     } catch(err){
